@@ -27,6 +27,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '4.2.5'
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.12.705'
+
 }
 
 tasks.named('test') {
