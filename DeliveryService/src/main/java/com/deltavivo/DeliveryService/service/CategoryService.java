@@ -7,6 +7,7 @@ import com.deltavivo.DeliveryService.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,6 +27,10 @@ public class CategoryService {
 
     public List<Category> getAll(){
         return this.repository.findAll();
+    }
+
+    public Optional<Category> getById(String id){
+        return this.repository.findById(UUID.fromString(id));
     }
 
     public Category update(String id, CategoryDTO categoryData){
