@@ -33,14 +33,14 @@ public class ProductController {
     }
 
     @PutMapping("/id")
-    public ResponseEntity<Product> update(@RequestParam String id, @RequestBody ProductDTO productData ){
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody ProductDTO productData ){
         Product updatedProduct = this.service.update(id, productData);
         return ResponseEntity.ok().body(updatedProduct);
 
     }
 
     @DeleteMapping("/id")
-    public ResponseEntity<Category> delete(@RequestParam String id){
+    public ResponseEntity<Category> delete(@PathVariable String id){
         this.service.delete(id);
         return ResponseEntity.noContent().build();
 
