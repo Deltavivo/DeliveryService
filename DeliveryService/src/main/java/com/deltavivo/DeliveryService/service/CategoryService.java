@@ -2,6 +2,7 @@ package com.deltavivo.DeliveryService.service;
 
 import com.deltavivo.DeliveryService.domain.Category;
 import com.deltavivo.DeliveryService.domain.CategoryDTO;
+import com.deltavivo.DeliveryService.domain.MessageDTO;
 import com.deltavivo.DeliveryService.exception.CategoryNotFoundException;
 import com.deltavivo.DeliveryService.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -14,15 +15,20 @@ import java.util.UUID;
 public class CategoryService {
 
     private final CategoryRepository repository;
+    
+    private final AwsSnsService snsService;
 
-    public CategoryService(CategoryRepository categoryRepository){
+    public CategoryService(CategoryRepository categoryRepository, AwsSnsService snsService){
         this.repository = categoryRepository;
+        this.snsService = snsService;
     }
 
-    public Category insert(CategoryDTO categoryData){
-        Category newCategory = new Category(categoryData);
-        this.repository.save(newCategory);
-        return newCategory;
+    public Category insert(CategoryDTO data){
+        Category category = new Category(data);
+        this.repository.save(category);
+
+        this.snsService.publish(new MessageDTO(category.toString()));
+        return category;
     }
 
     public List<Category> getAll(){
@@ -33,14 +39,15 @@ public class CategoryService {
         return this.repository.findById(UUID.fromString(id));
     }
 
-    public Category update(String id, CategoryDTO categoryData){
+    public Category update(String id, CategoryDTO data){
 
         Category category = this.repository.findById(UUID.fromString(id))
                 .orElseThrow(CategoryNotFoundException::new);
 
-        if(!categoryData.title().isEmpty()) category.setTitle(categoryData.title());
-        if(!categoryData.description().isEmpty()) category.setDescription(categoryData.description());
+        if(!data.title().isEmpty()) category.setTitle(data.title());
+        if(!data.description().isEmpty()) category.setDescription(data.description());
 
+        this.snsService.publish(new MessageDTO(data.toString()));
         this.repository.save(category);
         return category;
     }
