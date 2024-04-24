@@ -8,7 +8,7 @@ export const handler = async(event) => {
         for(const record of event.Records) {
             console.log("Iniciando processamento da mensagem", record)
             const rawBody = JSON.parse(record.body)
-            const body = JSON.parse(body.Message)
+            const body = JSON.parse(rawBody.Message)
             const ownerId = body.ownerId;
 
             try{
